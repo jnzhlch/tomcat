@@ -32,14 +32,17 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
+import org.apache.tomcat.util.net.ocsp.TesterOcspResponder.OcspResponse;
+
 @RunWith(Parameterized.class)
-public class TestOcspEnabled extends OcspBaseTest {
+public class TestOcspSoftFailTryLater extends OcspBaseTest {
 
     private static TesterOcspResponder ocspResponder;
 
     @BeforeClass
     public static void startOcspResponder() {
         ocspResponder = new TesterOcspResponder();
+        ocspResponder.setFixedResponse(OcspResponse.TRY_LATER);
         try {
             ocspResponder.start();
         } catch (Exception e) {
@@ -57,31 +60,24 @@ public class TestOcspEnabled extends OcspBaseTest {
     }
 
 
-    @Parameters(name = "{0} with OpenSSL trust {2}: clientOk {4}, serverOk {5}, verifyClient {6}, verifyServer {7}")
+    @Parameters(name = "{0} with OpenSSL trust {2}: softFail {4}, clientOk {5}")
     public static Collection<Object[]> parameters() {
         List<Object[]> parameterSets = new ArrayList<>();
         Collection<Object[]> baseData = OcspBaseTest.parameters();
 
         for (Object[] base : baseData) {
-            for (Boolean clientCertValid : booleans) {
-                for (Boolean serverCertValid : booleans) {
-                    for (ClientCertificateVerification verifyClientCert : ClientCertificateVerification.values()) {
-                        boolean useOpenSSLTrust = ((Boolean) base[2]).booleanValue();
-                        if (verifyClientCert == ClientCertificateVerification.OPTIONAL_NO_CA && !useOpenSSLTrust ||
-                                verifyClientCert == ClientCertificateVerification.ENABLED && !clientCertValid.booleanValue()) {
-                            continue;
-                        }
-                        for (Boolean verifyServerCert : booleans) {
-                            Boolean handshakeFailureExpected;
-                            if (!serverCertValid.booleanValue() && verifyServerCert.booleanValue()) {
-                                handshakeFailureExpected = Boolean.TRUE;
-                            } else {
-                                handshakeFailureExpected = Boolean.FALSE;
-                            }
-                            parameterSets.add(new Object[] { base[0], base[1], base[2], base[3], clientCertValid,
-                                    serverCertValid, verifyClientCert, verifyServerCert, handshakeFailureExpected});
-                        }
+            for (Boolean softFail : booleans) {
+                for (Boolean clientCertValid : booleans) {
+                    Boolean handshakeFailureExpected;
+
+                    if (softFail.booleanValue()) {
+                        handshakeFailureExpected = Boolean.FALSE;
+                    } else {
+                        handshakeFailureExpected = Boolean.TRUE;
                     }
+
+                    parameterSets.add(new Object[] { base[0], base[1], base[2], base[3], softFail, clientCertValid,
+                            handshakeFailureExpected});
                 }
             }
         }
@@ -89,25 +85,19 @@ public class TestOcspEnabled extends OcspBaseTest {
     }
 
     @Parameter(4)
-    public boolean clientCertValid;
+    public Boolean softFail;
 
     @Parameter(5)
-    public boolean serverCertValid;
+    public boolean clientCertValid;
 
     @Parameter(6)
-    public ClientCertificateVerification verifyClientCert;
-
-    @Parameter(7)
-    public boolean verifyServerCert;
-
-    @Parameter(8)
     public boolean handshakeFailureExpected;
 
     @Test
     public void test() throws Exception {
         Assume.assumeNotNull(ocspResponder);
         try {
-            doTest(clientCertValid, serverCertValid, verifyClientCert, verifyServerCert);
+            doTest(clientCertValid, true, ClientCertificateVerification.ENABLED, false, softFail);
             if (handshakeFailureExpected) {
                 Assert.fail("Handshake did not fail when expected to do so.");
             }

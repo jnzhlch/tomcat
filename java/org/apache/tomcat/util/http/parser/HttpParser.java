@@ -378,6 +378,10 @@ public class HttpParser {
     }
 
 
+    public static boolean isWhiteSpace(int c) {
+        return c == 9 || c == 32;
+    }
+
     public static boolean isAbsolutePath(int c) {
         return DEFAULT.isAbsolutePathRelaxed(c);
     }
@@ -399,15 +403,16 @@ public class HttpParser {
     }
 
 
-    // Skip any LWS and position to read the next character. The next character
-    // is returned as being able to 'peek()' it allows a small optimisation in
-    // some cases.
-    static int skipLws(Reader input) throws IOException {
+    /*
+     *  Skip any whitespace and position to read the next character. The next character is returned as being able to
+     *  'peek()' it allows a small optimisation in some cases.
+     */
+    static int skipWhitespace(Reader input) throws IOException {
 
         input.mark(1);
         int c = input.read();
 
-        while (c == 32 || c == 9 || c == 10 || c == 13) {
+        while (c == 32 || c == 9) {
             input.mark(1);
             c = input.read();
         }
@@ -419,7 +424,7 @@ public class HttpParser {
     static SkipResult skipConstant(Reader input, String constant) throws IOException {
         int len = constant.length();
 
-        skipLws(input);
+        skipWhitespace(input);
         input.mark(len);
         int c = input.read();
 
@@ -445,7 +450,7 @@ public class HttpParser {
     static String readToken(Reader input) throws IOException {
         StringBuilder result = new StringBuilder();
 
-        skipLws(input);
+        skipWhitespace(input);
         input.mark(1);
         int c = input.read();
 
@@ -472,7 +477,7 @@ public class HttpParser {
     static String readDigits(Reader input) throws IOException {
         StringBuilder result = new StringBuilder();
 
-        skipLws(input);
+        skipWhitespace(input);
         input.mark(1);
         int c = input.read();
 
@@ -486,6 +491,19 @@ public class HttpParser {
         input.reset();
 
         return result.toString();
+    }
+
+    /**
+     * @return the number if digits were found, -1 if no data was found or if data other than digits was found
+     */
+    static long readInteger(Reader input) throws IOException {
+        String digits = readDigits(input);
+
+        if (digits.isEmpty()) {
+            return -1;
+        }
+
+        return Integer.parseInt(digits);
     }
 
     /**
@@ -507,7 +525,7 @@ public class HttpParser {
      */
     static String readQuotedString(Reader input, boolean returnQuoted) throws IOException {
 
-        skipLws(input);
+        skipWhitespace(input);
         int c = input.read();
 
         if (c != '"') {
@@ -544,7 +562,7 @@ public class HttpParser {
     static String readTokenOrQuotedString(Reader input, boolean returnQuoted) throws IOException {
 
         // Peek at next character to enable correct method to be called
-        int c = skipLws(input);
+        int c = skipWhitespace(input);
 
         if (c == '"') {
             return readQuotedString(input, returnQuoted);
@@ -567,7 +585,7 @@ public class HttpParser {
         StringBuilder result = new StringBuilder();
         boolean quoted = false;
 
-        skipLws(input);
+        skipWhitespace(input);
         input.mark(1);
         int c = input.read();
 
@@ -620,7 +638,7 @@ public class HttpParser {
         StringBuilder result = new StringBuilder();
         boolean quoted = false;
 
-        skipLws(input);
+        skipWhitespace(input);
         input.mark(1);
         int c = input.read();
 
@@ -664,7 +682,7 @@ public class HttpParser {
     }
 
     static double readWeight(Reader input, char delimiter) throws IOException {
-        skipLws(input);
+        skipWhitespace(input);
         int c = input.read();
         if (c == -1 || c == delimiter) {
             // No q value just whitespace
@@ -675,7 +693,7 @@ public class HttpParser {
             return 0;
         }
         // RFC 7231 does not allow whitespace here but be tolerant
-        skipLws(input);
+        skipWhitespace(input);
         c = input.read();
         if (c != '=') {
             // Malformed. Use quality of zero so it is dropped.
@@ -684,7 +702,7 @@ public class HttpParser {
         }
 
         // RFC 7231 does not allow whitespace here but be tolerant
-        skipLws(input);
+        skipWhitespace(input);
         c = input.read();
 
         // Should be no more than 3 decimal places
@@ -717,7 +735,7 @@ public class HttpParser {
         }
 
         if (c == 9 || c == 32) {
-            skipLws(input);
+            skipWhitespace(input);
             c = input.read();
         }
 
@@ -943,7 +961,7 @@ public class HttpParser {
 
     static int validatePort(Reader reader, int colonPosition) throws IOException {
         // Remaining characters should be numeric ...
-        readLong(reader);
+        readInteger(reader);
         // ... followed by EOS
         if (reader.read() == -1) {
             return colonPosition;
