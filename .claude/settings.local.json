@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la bin/*.sh)",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)",
+      "Bash(git push:*)",
+      "Bash(ant:*)",
+      "Bash(git pull:*)",
+      "Bash(ls -la \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1/\"*/outputs/ 2>/dev/null | head -20)",
+      "Bash(ls -la \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1/\"*/outputs/output.md 2>/dev/null)",
+      "Bash(python \"C:/Users/Lenovo/.claude/plugins/cache/anthropic-agent-skills/document-skills/b0cbd3df1533/skills/skill-creator/eval-viewer/generate_review.py\" \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1\" --skill-name \"code-documentation-code-explain\" --benchmark \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1/benchmark.json\" --static \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1/review.html\")",
+      "Bash(set PYTHONIOENCODING=utf-8 && python -X utf8 \"C:/Users/Lenovo/.claude/plugins/cache/anthropic-agent-skills/document-skills/b0cbd3df1533/skills/skill-creator/eval-viewer/generate_review.py\" \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1\" --skill-name \"code-documentation-code-explain\" --benchmark \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1/benchmark.json\" --static \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1/review.html\")",
+      "Bash(cmd /c start \"\" \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1/review.html\")",
+      "Bash(explorer.exe \"C:\\\\Users\\\\Lenovo\\\\.claude\\\\skills\\\\code-explain-workspace\\\\iteration-1\")",
+      "Bash(cp \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1/eval-0-with_skill/eval_metadata.json\" \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-2/eval-0-with_skill/\" && cp \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1/eval-0-without_skill/eval_metadata.json\" \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-2/eval-0-without_skill/\" && cp \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1/eval-1-with_skill/eval_metadata.json\" \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-2/eval-1-with_skill/\" && cp \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1/eval-1-without_skill/eval_metadata.json\" \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-2/eval-1-without_skill/\" && cp \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1/eval-2-with_skill/eval_metadata.json\" \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-2/eval-2-with_skill/\" && cp \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1/eval-2-without_skill/eval_metadata.json\" \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-2/eval-2-without_skill/\")",
+      "Bash(sleep 5 && ls -la \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-2/\"*/outputs/output.md 2>/dev/null)",
+      "Bash(sleep 10 && ls -la \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-2/\"*/outputs/output.md 2>/dev/null)",
+      "Bash(set PYTHONIOENCODING=utf-8 && python -X utf8 \"C:/Users/Lenovo/.claude/plugins/cache/anthropic-agent-skills/document-skills/b0cbd3df1533/skills/skill-creator/eval-viewer/generate_review.py\" \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-2\" --skill-name \"code-documentation-code-explain\" --benchmark \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-2/benchmark.json\" --previous-workspace \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-1\" --static \"C:/Users/Lenovo/.claude/skills/code-explain-workspace/iteration-2/review.html\")",
+      "Bash(powershell -Command \"Start-Process 'C:\\\\Users\\\\Lenovo\\\\.claude\\\\skills\\\\code-explain-workspace\\\\iteration-2\\\\review.html'\")",
+      "Bash(python C:/Users/Lenovo/.claude/skills/code-documentation-code-explain/scripts/mermaid_templates.py --list)",
+      "Bash(python \"C:/Users/Lenovo/.claude/skills/code-documentation-code-explain/scripts/mermaid_templates.py\" lifecycle_tomcat)"
+    ]
+  }
+}
